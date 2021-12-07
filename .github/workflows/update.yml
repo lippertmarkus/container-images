@@ -5,12 +5,13 @@ on:
   push:
     paths-ignore:
       - '*/version'  # ignore changes this workflow does itself
+  workflow_dispatch:
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Check for new versions of images
         run: ./update.sh
 

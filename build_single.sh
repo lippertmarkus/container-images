@@ -28,7 +28,7 @@ fi
 for VERSION in ${WIN_TAGS[*]}
 do 
     echo "Building Windows $VERSION"
-    docker buildx build --platform windows/amd64 --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
+    docker buildx build --platform windows/amd64 --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --build-arg WINTAG=${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
     MANIFESTLIST+="${TARGETIMAGE}-${VERSION} "
 done
 

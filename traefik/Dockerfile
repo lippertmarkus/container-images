@@ -1,4 +1,4 @@
-ARG WINBASE=scratch
+ARG WINBASE
 FROM --platform=$BUILDPLATFORM curlimages/curl:7.80.0 AS build
 ARG TRAEFIK_VERSION
 WORKDIR /src
@@ -6,7 +6,7 @@ RUN curl -Lo traefik.zip https://github.com/traefik/traefik/releases/download/${
     unzip traefik.zip
 
 FROM ${WINBASE} AS windows
-ARG WINBASE
+ARG WINTAG
 ARG TRAEFIK_VERSION
 EXPOSE 80
 LABEL org.opencontainers.image.vendor="Markus Lippert" \
@@ -17,5 +17,5 @@ LABEL org.opencontainers.image.vendor="Markus Lippert" \
       org.opencontainers.image.documentation="https://docs.traefik.io"
 USER ContainerAdministrator
 ENTRYPOINT [ "traefik.exe" ]
-COPY --from=mcr.microsoft.com/windows/servercore:${WINBASE} /windows/system32/netapi32.dll /windows/system32/netapi32.dll
+COPY --from=mcr.microsoft.com/windows/servercore:${WINTAG} /windows/system32/netapi32.dll /windows/system32/netapi32.dll
 COPY --from=build /src/traefik.exe traefik.exe

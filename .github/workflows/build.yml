@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        fetch-depth: 2
       
       - name: Check for new versions of images and write to output var
         run: ./build_prep.sh

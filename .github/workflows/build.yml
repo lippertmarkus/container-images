@@ -45,5 +45,5 @@ jobs:
       - env:
           REPOSITORY: ${{ secrets.DOCKERHUB_USERNAME }}
           BUILD_DIR: ${{ matrix.dir }}
-        run: /build_single.sh
+        run: ./build_single.sh
         

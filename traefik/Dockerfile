@@ -19,5 +19,5 @@ LABEL org.opencontainers.image.vendor="Markus Lippert" \
       org.opencontainers.image.documentation="https://docs.traefik.io"
 USER ContainerAdministrator
 ENTRYPOINT [ "traefik.exe" ]
-COPY --from=deps /windows/system32/netapi32.dll /windows/system32/netapi32.dll
+COPY --from=deps /Windows/System32/netapi32.dll /Windows/System32/netapi32.dll
 COPY --from=build /src/traefik.exe traefik.exe

@@ -12,4 +12,4 @@ done
 
 out_array=$(printf '%s\n' "${target_dirs[@]}" | jq -R . | jq -s --compact-output .)
 echo "target dirs: $out_array"
-echo "::set-output name=matrix::{\"dir\": $out_array}"
+echo "::set-output name=matrix::$out_array"

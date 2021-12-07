@@ -11,14 +11,20 @@ jobs:
         with:
           fetch-depth: 2
       
-      - name: Check for new versions of images and write to output var
+      - id: set-matrix
+        name: Check for new versions of images and write to output var
         run: ./build_prep.sh
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
 
   build:
     needs: build-prep
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.build-prep.outputs.matrix)}}
+      matrix:
+        dir: ${{fromJson(needs.build-prep.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
 

@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dir: ${{fromJson(needs.build-prep.outputs.matrix)}}
+        include: ${{fromJson(needs.build-prep.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
 
@@ -51,7 +51,16 @@ jobs:
             ${{ runner.os }}-buildx-${{ matrix.dir }}-
 
       - env:
-          REPOSITORY: ${{ secrets.DOCKERHUB_USERNAME }}
+          REPOSITORY: ${{ secrets.REPOSITORY }}
           BUILD_DIR: ${{ matrix.dir }}
+          VERSION: ${{ matrix.version }}
         run: ./build_single.sh
         
+  push-manifest:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Push manifest
+        run: ./push_manifest.sh

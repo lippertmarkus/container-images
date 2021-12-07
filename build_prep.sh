@@ -10,6 +10,22 @@ for file in $files ; do
     fi
 done
 
-out_array=$(printf '%s\n' "${target_dirs[@]}" | jq -R . | jq -s --compact-output .)
-echo "target dirs: $out_array"
-echo "::set-output name=matrix::$out_array"
+# produce matrix array like [{"dir": "traefik", "version": "1809"}, ...]
+json_matrix=""
+for target_dir in $target_dirs; do
+    . "$target_dir/build_config.sh"
+
+    # add a target for each windows build
+    for win_tag in ${WIN_TAGS[*]}; do
+        json_matrix+="{\"dir\": \"$target_dir\", \"version\": \"$win_tag\"}, "
+    done
+
+    # add single matrix target for all linux builds
+    if ! [ -z "$LINUX_PLATFORMS" ]; then
+        json_matrix+="{\"dir\": \"$target_dir\", \"version\": \"$LINUX_PLATFORMS\"}, "
+    fi
+done
+json_matrix=${json_matrix::-2}  # remove last comma and space
+
+echo "matrix: [$json_matrix]"
+echo "::set-output name=matrix::[$json_matrix]"

@@ -1,0 +1,23 @@
+name: Check for updates
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    paths-ignore:
+      - '*/version'  # ignore changes this workflow does itself
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Check for new versions of images
+        run: ./update.sh
+
+      - name: Commit new version files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "updated versions"
+          git push

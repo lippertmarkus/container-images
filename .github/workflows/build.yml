@@ -17,6 +17,7 @@ jobs:
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix_dirs: ${{ steps.set-matrix.outputs.matrix_dirs }}
 
 
   build:
@@ -42,17 +43,25 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - env:
+      - name: Build and push image
+        env:
           REPOSITORY: ${{ secrets.REPOSITORY }}
           BUILD_DIR: ${{ matrix.dir }}
           VERSION: ${{ matrix.version }}
         run: ./build_single.sh
-        
+
+
   push-manifest:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: ${{fromJson(needs.build-prep.outputs.matrix_dirs)}}
     steps:
       - uses: actions/checkout@v2
       
       - name: Push manifest
+        env:
+          REPOSITORY: ${{ secrets.REPOSITORY }}
+          BUILD_DIR: ${{ matrix.dir }}
         run: ./push_manifest.sh

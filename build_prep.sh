@@ -29,3 +29,7 @@ json_matrix=${json_matrix::-2}  # remove last comma and space
 
 echo "matrix: [$json_matrix]"
 echo "::set-output name=matrix::[$json_matrix]"
+
+out_array=$(printf '%s\n' "${target_dirs[@]}" | jq -R . | jq -s --compact-output .)
+echo "target dirs: $out_array"
+echo "::set-output name=matrix_dirs::$out_array" 

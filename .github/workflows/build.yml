@@ -52,7 +52,7 @@ jobs:
 
 
   push-manifest:
-    needs: build
+    needs: [build, build-prep]
     runs-on: ubuntu-latest
     strategy:
       matrix:

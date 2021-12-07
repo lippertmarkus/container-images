@@ -59,6 +59,12 @@ jobs:
         dir: ${{fromJson(needs.build-prep.outputs.matrix_dirs)}}
     steps:
       - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Push manifest
         env:

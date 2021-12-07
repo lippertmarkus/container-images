@@ -9,8 +9,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Check for new versions of images
+      - name: Check for new versions of images and write to output var
         run: ./build.sh
-        
+
   build:
-    # TODO dynamic matrix based on image list from last job
+    needs: build-prep
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.build-prep.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+          export REPOSITORY="lippertmarkus"
+          export BUILD_DIR="${{ matrix.dir }}"
+          ./build_single.sh

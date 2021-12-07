@@ -19,10 +19,10 @@ echo "Building image $TARGETIMAGE"
 if [[ "$VERSION" == linux* ]]; then
     # build for Linux
     echo "Building for Linux: $VERSION"
-    docker buildx build --platform $VERSION --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --push --pull --target linux $ADDITIONAL_ARGS -t $TARGETIMAGE .
+    docker buildx build --platform $VERSION --push --pull --target linux $ADDITIONAL_ARGS -t $TARGETIMAGE .
 else
     # build for Windows
     echo "Building for Windows Version $VERSION"
-    docker buildx build --platform windows/amd64 --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --build-arg WINTAG=${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
+    docker buildx build --platform windows/amd64 --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --build-arg WINTAG=${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
 fi
 

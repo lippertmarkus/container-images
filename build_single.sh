@@ -21,14 +21,14 @@ echo "Building image $TARGETIMAGE"
 # build for Linux
 if ! [ -z "$LINUX_PLATFORMS" ]; then
     echo "Building for Linux: $LINUX_PLATFORMS"
-    docker buildx build --platform $LINUX_PLATFORMS --push --pull --target linux $ADDITIONAL_ARGS -t $TARGETIMAGE .
+    docker buildx build --platform $LINUX_PLATFORMS --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --push --pull --target linux $ADDITIONAL_ARGS -t $TARGETIMAGE .
 fi
 
 # build for Windows
 for VERSION in ${WIN_TAGS[*]}
 do 
     echo "Building Windows $VERSION"
-    docker buildx build --platform windows/amd64 --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --build-arg WINTAG=${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
+    docker buildx build --platform windows/amd64 --cache-from "type=local,src=/tmp/.buildx-cache" --cache-to "type=local,dest=/tmp/.buildx-cache" --push --pull --build-arg WINBASE=${WINBASE}:${VERSION} --build-arg WINTAG=${VERSION} --target windows $ADDITIONAL_ARGS -t "${TARGETIMAGE}-${VERSION}" .
     MANIFESTLIST+="${TARGETIMAGE}-${VERSION} "
 done
 

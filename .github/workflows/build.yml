@@ -1,7 +1,7 @@
 name: Build new images for updated versions
 on:
   schedule:
-    - cron: '45 14 * * *'
+    - cron: '8 13 * * *'
   workflow_dispatch:
 jobs:
   update:

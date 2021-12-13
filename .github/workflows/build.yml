@@ -6,28 +6,23 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-    condition: github.event_name != 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: Check for new versions of images
+        if: github.event_name != 'workflow_dispatch'
         run: ./update.sh
 
       - name: Commit new version files
+        if: github.event_name != 'workflow_dispatch'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
           git diff-index --quiet HEAD || git commit -m "updated versions"
           git push
-
-
-  build-prep:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
       
       - id: set-matrix
         name: Check for new versions of images and write to output var
@@ -39,11 +34,11 @@ jobs:
 
 
   build:
-    needs: build-prep
+    needs: update
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include: ${{fromJson(needs.build-prep.outputs.matrix)}}
+        include: ${{fromJson(needs.update.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
 
@@ -70,11 +65,11 @@ jobs:
 
 
   push-manifest:
-    needs: [build, build-prep]
+    needs: [build, update]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dir: ${{fromJson(needs.build-prep.outputs.matrix_dirs)}}
+        dir: ${{fromJson(needs.update.outputs.matrix_dirs)}}
     steps:
       - uses: actions/checkout@v2
 

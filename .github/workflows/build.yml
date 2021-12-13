@@ -1,9 +1,27 @@
 name: Build new files for updated versions
 on:
-  push:
-    paths:
-      - '*/version'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 jobs:
+  update:
+    runs-on: ubuntu-latest
+    condition: github.event_name != 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check for new versions of images
+        run: ./update.sh
+
+      - name: Commit new version files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git diff-index --quiet HEAD || git commit -m "updated versions"
+          git push
+
+
   build-prep:
     runs-on: ubuntu-latest
     steps:

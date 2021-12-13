@@ -36,6 +36,7 @@ jobs:
   build:
     needs: update
     runs-on: ubuntu-latest
+    if: needs.update.outputs.matrix != '[]'
     strategy:
       matrix:
         include: ${{fromJson(needs.update.outputs.matrix)}}

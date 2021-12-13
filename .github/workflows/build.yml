@@ -1,4 +1,4 @@
-name: Build new files for updated versions
+name: Build new images for updated versions
 on:
   schedule:
     - cron: '0 0 * * *'

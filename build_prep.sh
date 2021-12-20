@@ -1,4 +1,4 @@
-files=$(git diff --name-only HEAD~1)
+files=$(git diff $(git log -1 --before=@{last.hour} --format=%H) --name-only --stat)
 echo "files changed: $files"
 
 target_dirs=()

@@ -42,6 +42,8 @@ jobs:
         include: ${{fromJson(needs.update.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ''
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -73,6 +75,8 @@ jobs:
         dir: ${{fromJson(needs.update.outputs.matrix_dirs)}}
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ''
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1

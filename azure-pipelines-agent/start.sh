@@ -69,9 +69,11 @@ curl -LsS $AZP_AGENT_PACKAGE_LATEST_URL | tar -xz & wait $!
 
 source ./env.sh
 
-trap 'cleanup; exit 0' EXIT
-trap 'cleanup; exit 130' INT
-trap 'cleanup; exit 143' TERM
+if ! $DUMMY_AGENT; then
+  trap 'cleanup; exit 0' EXIT
+  trap 'cleanup; exit 130' INT
+  trap 'cleanup; exit 143' TERM
+fi
 
 print_header "3. Configuring Azure Pipelines agent..."
 
@@ -84,6 +86,10 @@ print_header "3. Configuring Azure Pipelines agent..."
   --work "${AZP_WORK:-_work}" \
   --replace \
   --acceptTeeEula & wait $!
+
+if $DUMMY_AGENT; then
+  exit 0
+fi
 
 print_header "4. Running Azure Pipelines agent..."
 

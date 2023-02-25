@@ -93,7 +93,9 @@ if ! grep -q "template" <<< "$AZP_AGENT_NAME"; then
   trap 'cleanup; exit 0' EXIT
   trap 'cleanup; exit 130' INT
   trap 'cleanup; exit 143' TERM
-
+else
+  # directly exit the template agent
+  exit 0
 fi
 
 chmod +x ./run-docker.sh

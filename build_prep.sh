@@ -1,14 +1,18 @@
-files=$(git diff $(git log -1 --before=@{last.hour} --format=%H) --name-only --stat)
-echo "files changed: $files"
-
 target_dirs=()
 
-for file in $files ; do
-    image_dir=$(dirname "$file")
-    if [[ ! " ${target_dirs[*]} " =~ " ${image_dir} " ]] && [[ "$image_dir" =~ ^[^\.]+ ]]; then
-        target_dirs+=("$image_dir")
-    fi
-done
+if [ -z "$MANUAL_IMAGE" ]; then
+    files=$(git diff $(git log -1 --before=@{last.hour} --format=%H) --name-only --stat)
+    echo "files changed: $files"
+
+    for file in $files ; do
+        image_dir=$(dirname "$file")
+        if [[ ! " ${target_dirs[*]} " =~ " ${image_dir} " ]] && [[ "$image_dir" =~ ^[^\.]+ ]]; then
+            target_dirs+=("$image_dir")
+        fi
+    done
+else
+    target_dirs+=("$MANUAL_IMAGE")
+fi
 
 # produce matrix array like [{"dir": "traefik", "version": "1809"}, ...]
 json_matrix=""

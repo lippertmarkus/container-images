@@ -3,6 +3,10 @@ on:
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
+    image:
+      description: 'image to build'
+      type: string
+      required: true
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -27,6 +31,8 @@ jobs:
       - id: set-matrix
         name: Check for new versions of images and write to output var
         run: ./build_prep.sh
+        env:
+          MANUAL_IMAGE: ${{ inputs.image }}
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}

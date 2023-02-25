@@ -3,10 +3,11 @@ on:
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
-    image:
-      description: 'image to build'
-      type: string
-      required: true
+    inputs:
+      image:
+        description: 'image to build'
+        type: string
+        required: true
 jobs:
   update:
     runs-on: ubuntu-latest
